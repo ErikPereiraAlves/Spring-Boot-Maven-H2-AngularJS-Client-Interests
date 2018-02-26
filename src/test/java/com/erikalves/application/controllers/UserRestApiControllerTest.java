@@ -29,24 +29,16 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserRestApiControllerTest {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRestApiControllerTest.class);
-
     @LocalServerPort
     private int port;
-
     TestRestTemplate restTemplate = new TestRestTemplate();
-
     HttpHeaders headers = new HttpHeaders();
-
     @Autowired
     @Qualifier(value = "UserService")
     UserService service;
-
     String json;
-
     User savedUser;
-
     private String createURLWithPort(String uri) {
         return "http://localhost:" + port + "/bank"+ uri;
     }
@@ -73,7 +65,6 @@ public class UserRestApiControllerTest {
 
         //then
         assertTrue(findUser.getUserId()==(savedUser.getUserId()));
-
     }
 
 
@@ -81,32 +72,25 @@ public class UserRestApiControllerTest {
     public void shouldFindAllUsers() {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
-
         ResponseEntity<String> response = restTemplate.exchange(
                 createURLWithPort("/api/v1/users"),
                 HttpMethod.GET,entity,String.class);
-
         LOGGER.debug("Response results {}",response.getBody());
         Assert.assertFalse(response.getBody().contains("Internal Server Error"));
         Assert.assertTrue(response.getBody().contains("[{\"userId\":"));
-
     }
 
     @Test
     public void shouldFindSpecificUser() {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
-
         ResponseEntity<String> response = restTemplate.exchange(
                 createURLWithPort("/api/v1/users/1"),
                 HttpMethod.GET,entity,String.class);
-
         LOGGER.debug("Response results {}",response.getBody());
         Assert.assertFalse(response.getBody().contains("Internal Server Error"));
         Assert.assertTrue(response.getBody().contains("{\"userId\":1,\"userName\":\"USER A\",\"userLimitCredit\":1000.00,\"userRisk\":\"A\",\"userInterest\":10.25}"));
     }
-
-
 
     @Test
     public void shouldDeleteUser() {
@@ -133,7 +117,6 @@ public class UserRestApiControllerTest {
         Long userId = savedUser.getUserId();
         savedUser.setUserName("UPDATED BY JUNIT");
         restTemplate.put(createURLWithPort("/api/v1/users") , savedUser, String.class);
-
         User updatedUser = service.get(userId);
         Assert.assertNotNull(updatedUser);
         Assert.assertEquals(updatedUser.getUserId() , userId);

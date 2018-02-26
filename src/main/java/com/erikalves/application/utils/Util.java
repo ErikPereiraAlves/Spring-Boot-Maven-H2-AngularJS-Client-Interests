@@ -20,11 +20,8 @@ import java.util.List;
 
 public class Util {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
-
     private static final Gson GSON = new Gson();
-
 
     public static boolean isJSONValid(String jsonInString) {
 
@@ -51,8 +48,6 @@ public class Util {
 
         }
     }
-
-
 
     public static java.sql.Date getCurrentDate()  {
 
@@ -84,14 +79,12 @@ public class Util {
 
         String json = new Gson().toJson(object);
         return json;
-
     }
 
     public static String toJson(Object object) {
 
         String json = new Gson().toJson(object);
         return json;
-
     }
 
     public static JSONArray toJsonArray(Object object) {
@@ -99,7 +92,6 @@ public class Util {
         String json = toJson(object);
         JSONArray array = new JSONArray(json);
         return array;
-
     }
 
     public static Gson getGson() {
@@ -108,11 +100,9 @@ public class Util {
         return gson;
     }
 
-    public static <T> List<T> iterableToCollection(Iterable<T> iterable)
-    {
+    public static <T> List<T> iterableToCollection(Iterable<T> iterable){
         List<T> list = new ArrayList<>();
         iterable.forEach(list::add);
-
         return list;
     }
 
@@ -132,7 +122,6 @@ public class Util {
         else{
             throw new ApplicationException("User object is null");
         }
-
     }
 
     public static void main(String[] args) {
@@ -149,9 +138,7 @@ public class Util {
         else if (user.getUserRisk().equalsIgnoreCase("C")){
             user.setUserInterest(user.getUserInterest() *1.2);
         }
-
         LOGGER.debug("User {} ", user.toString());
-
         String json = getGson().toJson(user);
         LOGGER.debug("Json representation of a the created Entity {} ", json);
 

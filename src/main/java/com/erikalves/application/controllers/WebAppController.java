@@ -12,17 +12,16 @@ public class WebAppController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebAppController.class);
 
-    @RequestMapping("/store/")
+    @RequestMapping("/bank/")
     String home(ModelMap modal) {
         modal.addAttribute("title","User CRUD - Erik P. Alves");
-        LOGGER.debug("***************************  calling users.....");
+        LOGGER.debug("[WebAppController] calling users web page.");
         return "users";
     }
 
-    @RequestMapping("/store/{page}")
+    @RequestMapping("/bank/{page}")
     String partialHandler(@PathVariable("page") final String page) {
-
-        LOGGER.debug("***************************  calling ....."+page);
+        LOGGER.debug("[WebAppController] calling page {}",page);
         return page;
     }
 

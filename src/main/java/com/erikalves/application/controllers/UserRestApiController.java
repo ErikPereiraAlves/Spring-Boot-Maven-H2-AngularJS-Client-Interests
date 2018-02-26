@@ -30,16 +30,13 @@ class UserRestApiController {
     public ResponseEntity<List<User>> findAll() {
 
         LOGGER.debug("[REST API CONTROLLER] Return all users ");
-
         List <User> users =Util.iterableToCollection(userService.findAll());
-
         if(null!=users && users.size() >0) {
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     //GET ONE
@@ -47,7 +44,6 @@ class UserRestApiController {
     public ResponseEntity<User>  findOne(@PathVariable("user_id") String userId) {
 
         LOGGER.debug("[REST API CONTROLLER] Return a user "+userId);
-
         User user =userService.get(Util.LongfyId(userId));
         LOGGER.debug("*** user found in H2 {}",user);
         if(null!=user) {
@@ -55,9 +51,7 @@ class UserRestApiController {
         }
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
-
     }
 
 
@@ -66,9 +60,7 @@ class UserRestApiController {
     public ResponseEntity<String> delete(@PathVariable("user_id") String userId) {
 
         LOGGER.debug("[REST API CONTROLLER] Delete a user "+userId);
-
         userService.delete(Util.LongfyId(userId));
-
         return ResponseEntity.ok((userId));
     }
 
@@ -77,9 +69,7 @@ class UserRestApiController {
     public ResponseEntity<User> create(@RequestBody User user) {
 
         LOGGER.debug("[REST API CONTROLLER] Create a user "+user);
-
         User createdUser = userService.save(user);
-
         return ResponseEntity.created(URI.create("/" + createdUser.getUserId())).body((createdUser));
     }
 
@@ -89,9 +79,7 @@ class UserRestApiController {
     public ResponseEntity<?> update(@RequestBody User user) {
 
         LOGGER.debug("[REST API CONTROLLER] Update a user "+user);
-
         userService.update(user);
-
         return ResponseEntity.noContent().build();
     }
 

@@ -25,17 +25,12 @@ import java.util.List;
 public class UserServiceImplTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplTest.class);
-
     @Autowired
     @Qualifier(value="UserService")
     UserService service;
-
     @Autowired (required=true)
     UserRepository repository;
-
-
     User user;
-
     User savedUser;
 
     @Before
@@ -46,8 +41,6 @@ public class UserServiceImplTest {
         user.setUserLimitCredit(new BigDecimal("100.00"));
         user.setUserRisk("B");
         Util.interestCalculation(user);
-
-
         savedUser = service.save(user);
         LOGGER.debug("saved user ID {}",savedUser.toString());
         Assert.assertNotNull(savedUser.getUserId());

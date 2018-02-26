@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -22,12 +21,9 @@ import java.util.List;
 public class UserRepositoryTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryTest.class);
-
     @Autowired(required = true)
     UserRepository repository;
-
     User createdUser;
-
     Long existingUserId =1l;
 
     @Before
@@ -38,9 +34,7 @@ public class UserRepositoryTest {
         createdUser.setUserLimitCredit(new BigDecimal("100.00"));
         createdUser.setUserRisk("B");
         Util.interestCalculation(createdUser);
-
     }
-
 
     @Test
     public void shouldCreateUpdateDeleteUser() {
@@ -56,7 +50,6 @@ public class UserRepositoryTest {
         LOGGER.debug("saved entity ID {}", localUser);
         Assert.assertNotNull(localUser.getUserId());
         LOGGER.debug(" *** CREATE RESULT *** {}", localUser);
-
     }
 
     public void shouldDeleteUser() {
@@ -69,7 +62,6 @@ public class UserRepositoryTest {
         LOGGER.debug(" *** DELETE RESULT *** {}", deletedUser);
     }
 
-
     public void shouldUpdateUser() {
 
         createdUser.setUserRisk("C");
@@ -80,18 +72,14 @@ public class UserRepositoryTest {
         LOGGER.debug(" *** UPDATE RESULT *** {}", updatedUser.getUserName());
     }
 
-
-
     @Test
     public void shouldFindSpecificUser() {
-
 
         User findUser = repository.getOne(existingUserId);
         Assert.assertTrue(null != findUser);
         LOGGER.debug(" *** RESULT *** {}", findUser.toString());
 
     }
-
 
     @Test
     public void shouldFindAllUsers()  {
@@ -104,9 +92,6 @@ public class UserRepositoryTest {
             Assert.assertTrue(null != user.getUserId());
             LOGGER.debug(" *** RESULT *** {}", user.toString());
         }
-
     }
-
-
 
 }
