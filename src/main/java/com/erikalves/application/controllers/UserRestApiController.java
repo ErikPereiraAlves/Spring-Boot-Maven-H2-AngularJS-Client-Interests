@@ -3,7 +3,6 @@ package com.erikalves.application.controllers;
 
 import com.erikalves.application.model.User;
 import com.erikalves.application.service.UserService;
-import com.erikalves.application.service.UserServiceImpl;
 import com.erikalves.application.utils.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ class UserRestApiController {
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> findAll() {
 
-        LOGGER.debug("****************  Return all users **********************  ");
+        LOGGER.debug("[REST API CONTROLLER] Return all users ");
 
         List <User> users =Util.iterableToCollection(userService.findAll());
 
@@ -45,7 +44,9 @@ class UserRestApiController {
 
     //GET ONE
     @GetMapping(value = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User>  getExclude(@PathVariable("user_id") String userId) {
+    public ResponseEntity<User>  findOne(@PathVariable("user_id") String userId) {
+
+        LOGGER.debug("[REST API CONTROLLER] Return a user "+userId);
 
         User user =userService.get(Util.LongfyId(userId));
         LOGGER.debug("*** user found in H2 {}",user);
@@ -60,29 +61,34 @@ class UserRestApiController {
     }
 
 
-
     //DELETE
     @DeleteMapping(value = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> delete(@PathVariable("product_id") String productId) {
+    public ResponseEntity<String> delete(@PathVariable("user_id") String userId) {
 
-        userService.delete(Util.LongfyId(productId));
+        LOGGER.debug("[REST API CONTROLLER] Delete a user "+userId);
 
-        return ResponseEntity.ok((productId));
+        userService.delete(Util.LongfyId(userId));
+
+        return ResponseEntity.ok((userId));
     }
 
     // CREATE
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(@RequestBody User product) {
+    public ResponseEntity<User> create(@RequestBody User user) {
 
-        User savedUder = userService.save(product);
+        LOGGER.debug("[REST API CONTROLLER] Create a user "+user);
 
-        return ResponseEntity.created(URI.create("/" + savedUder.getUserId())).body((savedUder));
+        User createdUser = userService.save(user);
+
+        return ResponseEntity.created(URI.create("/" + createdUser.getUserId())).body((createdUser));
     }
 
 
     // UPDATE
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@RequestBody User user) {
+
+        LOGGER.debug("[REST API CONTROLLER] Update a user "+user);
 
         userService.update(user);
 

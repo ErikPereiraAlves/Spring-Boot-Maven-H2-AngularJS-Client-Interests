@@ -4,8 +4,6 @@ import com.erikalves.application.exceptions.ApplicationException;
 import com.erikalves.application.model.User;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +11,11 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class Util {
@@ -123,11 +118,19 @@ public class Util {
 
     public static void interestCalculation(User user){
 
-        if (user.getUserRisk().equalsIgnoreCase("B")){
-            user.setUserInterest(user.getUserInterest() *1.1);
+        LOGGER.debug("User's current interest {} ", user.getUserInterest());
+        Double updatedInterest = 1.0;
+        if(null!=user) {
+            if (user.getUserRisk().equalsIgnoreCase("B")) {
+                updatedInterest = user.getUserInterest() * 1.1;
+                user.setUserInterest(updatedInterest);
+            } else if (user.getUserRisk().equalsIgnoreCase("C")) {
+                updatedInterest = user.getUserInterest() * 1.2;
+                user.setUserInterest(updatedInterest);
+            }
         }
-        else if (user.getUserRisk().equalsIgnoreCase("C")){
-            user.setUserInterest(user.getUserInterest() *1.2);
+        else{
+            throw new ApplicationException("User object is null");
         }
 
     }

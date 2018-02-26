@@ -6,40 +6,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.money.Monetary;
-
-import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.util.Locale;
-
-import javax.money.Monetary;
 import javax.money.MonetaryAmount;
 import javax.money.MonetaryRounding;
-import javax.money.format.MonetaryAmountFormat;
-import javax.money.format.MonetaryFormats;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+// Nao utilizado na aplicacao. Apenas mostrando uma 2nd opcao que se poderia utilizar. Erik Pereira Alves
 public class MoneyTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MoneyTest.class);
 
     @Test
     public void testMoneyApi() {
-        MonetaryAmount eurAmount1 = Monetary.getDefaultAmountFactory().setNumber(1.1111).setCurrency("REAL").create();
-        MonetaryAmount eurAmount2 = Monetary.getDefaultAmountFactory().setNumber(1.1141).setCurrency("REAL").create();
+        MonetaryAmount money1 = Monetary.getDefaultAmountFactory().setNumber(1.1111).setCurrency("BRL").create();
+        MonetaryAmount money2 = Monetary.getDefaultAmountFactory().setNumber(1.1141).setCurrency("BRL").create();
 
-        MonetaryAmount eurAmount3 = eurAmount1.add(eurAmount2);
-        //assertThat(eurAmount3.toString(), is("EUR 2.2252"));
+        MonetaryAmount money3 = money1.add(money2);
+        assertThat(money3.toString(), is("BRL 2.2252"));
 
-        LOGGER.debug(eurAmount3.toString());
+        LOGGER.debug(money3.toString());
 
         MonetaryRounding defaultRounding = Monetary.getDefaultRounding();
-        MonetaryAmount eurAmount4 = eurAmount3.with(defaultRounding);
-        //assertThat(eurAmount4.toString(), is("EUR 2.23"));
+        MonetaryAmount money4 = money3.with(defaultRounding);
+        assertThat(money4.toString(), is("BRL 2.23"));
 
-        MonetaryAmountFormat germanFormat = MonetaryFormats.getAmountFormat(Locale.US);
-        //assertThat(germanFormat.format(eurAmount4), is("EUR 2,23") );
 
 
     }

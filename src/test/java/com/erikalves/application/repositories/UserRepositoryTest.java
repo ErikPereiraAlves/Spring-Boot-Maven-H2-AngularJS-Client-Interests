@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 
 @RunWith(SpringRunner.class)
@@ -35,7 +34,7 @@ public class UserRepositoryTest {
     public void begin() {
 
         createdUser = new User();
-       createdUser.setUserName("Erik Alves");
+        createdUser.setUserName("Erik Alves");
         createdUser.setUserLimitCredit(new BigDecimal("100.00"));
         createdUser.setUserRisk("B");
         Util.interestCalculation(createdUser);
@@ -44,45 +43,47 @@ public class UserRepositoryTest {
 
 
     @Test
-    public void shouldCreateUpdateDeleteProduct() {
+    public void shouldCreateUpdateDeleteUser() {
 
-        shouldCreateProduct();
-        shouldUpdateProduct();
-        shouldDeleteProduct();
+        shouldCreateUser();
+        shouldUpdateUser();
+        shouldDeleteUser();
     }
 
-    public void shouldCreateProduct() {
+    public void shouldCreateUser() {
 
         User localUser = repository.save(createdUser);
         LOGGER.debug("saved entity ID {}", localUser);
         Assert.assertNotNull(localUser.getUserId());
-
+        LOGGER.debug(" *** CREATE RESULT *** {}", localUser);
 
     }
 
-    public void shouldDeleteProduct() {
+    public void shouldDeleteUser() {
 
         Long id = createdUser.getUserId();
         repository.delete(id);
+        repository.flush();
         User deletedUser = repository.findOne(id);
         Assert.assertEquals(null, deletedUser);
-
+        LOGGER.debug(" *** DELETE RESULT *** {}", deletedUser);
     }
 
 
-    public void shouldUpdateProduct() {
+    public void shouldUpdateUser() {
 
         createdUser.setUserRisk("C");
         createdUser.setUserName("Name updated by JUNIT - John Doe is my name now");
         User updatedUser = repository.save(createdUser);
         Assert.assertTrue(null != updatedUser);
         Assert.assertTrue("Name updated by JUNIT - John Doe is my name now".equals(updatedUser.getUserName()));
+        LOGGER.debug(" *** UPDATE RESULT *** {}", updatedUser.getUserName());
     }
 
 
 
     @Test
-    public void findSpecificUser() {
+    public void shouldFindSpecificUser() {
 
 
         User findUser = repository.getOne(existingUserId);
@@ -93,10 +94,10 @@ public class UserRepositoryTest {
 
 
     @Test
-    public void findAllIncludingRelationships()  {
+    public void shouldFindAllUsers()  {
 
         List<User> list = repository.findAll();
-
+        LOGGER.debug(" *** LIST *** {}", list);
         Assert.assertTrue(null != list);
         for(User user: list){
             Assert.assertTrue(null != user);

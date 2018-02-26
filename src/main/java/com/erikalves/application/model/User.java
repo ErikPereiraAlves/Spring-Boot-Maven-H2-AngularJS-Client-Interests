@@ -1,14 +1,9 @@
 package com.erikalves.application.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @Table(name="USER")
@@ -28,7 +23,7 @@ public class User implements Serializable {
 
     @NotNull
     @Column (name = "USER_LIMIT_CREDIT")
-    private BigDecimal userLimitCredit;
+    private BigDecimal userLimitCredit = new BigDecimal("0.00");
 
     @NotNull
     @Column (name = "USER_RISK")
@@ -36,17 +31,8 @@ public class User implements Serializable {
 
     @NotNull
     @Column (name = "USER_INTEREST")  // interest = taxa de juros
-    private Double userInterest;
+    private Double userInterest=0.0;
 
-    public User() {
-    }
-
-    public User(String userName, BigDecimal userLimitCredit, String userRisk, Double userInterest) {
-        this.userName = userName;
-        this.userLimitCredit = userLimitCredit;
-        this.userRisk = userRisk;
-        this.userInterest = userInterest;
-    }
 
     public Long getUserId() {
         return userId;

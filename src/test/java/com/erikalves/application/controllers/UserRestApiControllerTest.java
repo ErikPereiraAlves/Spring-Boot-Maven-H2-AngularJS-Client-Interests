@@ -88,8 +88,7 @@ public class UserRestApiControllerTest {
 
         LOGGER.debug("Response results {}",response.getBody());
         Assert.assertFalse(response.getBody().contains("Internal Server Error"));
-        //it has to have at least the parent product with id of 1
-        Assert.assertTrue(response.getBody().contains("[{\"productId\":1,\"productParentId\""));
+        Assert.assertTrue(response.getBody().contains("[{\"userId\":"));
 
     }
 
@@ -104,8 +103,7 @@ public class UserRestApiControllerTest {
 
         LOGGER.debug("Response results {}",response.getBody());
         Assert.assertFalse(response.getBody().contains("Internal Server Error"));
-        //it has to have at least the parent product with id of 1
-        Assert.assertTrue(response.getBody().contains("[{\"productId\":1,\"productParentId\""));
+        Assert.assertTrue(response.getBody().contains("{\"userId\":1,\"userName\":\"USER A\",\"userLimitCredit\":1000.00,\"userRisk\":\"A\",\"userInterest\":10.25}"));
     }
 
 
@@ -113,8 +111,8 @@ public class UserRestApiControllerTest {
     @Test
     public void shouldDeleteUser() {
 
-        restTemplate.delete(createURLWithPort("/api/v1/products/"+savedUser.getUserId()));
-        User deletedUser = service.get(savedUser.getUserId());
+        restTemplate.delete(createURLWithPort("/api/v1/users/3"));
+        User deletedUser = service.get(Util.LongfyId("3"));
         LOGGER.debug("Response results {}",deletedUser);
         Assert.assertNull(deletedUser);
 

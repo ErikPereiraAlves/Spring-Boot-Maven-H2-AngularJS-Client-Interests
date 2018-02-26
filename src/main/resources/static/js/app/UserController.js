@@ -42,12 +42,12 @@ angular.module('bank').controller('UserController',
                         self.successMessage = 'User created successfully';
                         self.errorMessage='';
                         self.done = true;
-                        self.product={};
+                        self.user={};
                         $scope.myForm.$setPristine();
                     },
                     function (errResponse) {
-                        console.error('Error while creating Product');
-                        self.errorMessage = 'Error while creating Product: ' + errResponse.data.errorMessage;
+                        console.error('Error while creating entity');
+                        self.errorMessage = 'Error while creating entity: ' + errResponse.data.errorMessage;
                         self.successMessage='';
                     }
                 );
