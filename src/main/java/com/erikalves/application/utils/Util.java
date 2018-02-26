@@ -14,11 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class Util {
 
@@ -110,18 +113,44 @@ public class Util {
         return gson;
     }
 
+    public static <T> List<T> iterableToCollection(Iterable<T> iterable)
+    {
+        List<T> list = new ArrayList<>();
+        iterable.forEach(list::add);
+
+        return list;
+    }
+
+    public static void interestCalculation(User user){
+
+        if (user.getUserRisk().equalsIgnoreCase("B")){
+            user.setUserInterest(user.getUserInterest() *1.1);
+        }
+        else if (user.getUserRisk().equalsIgnoreCase("C")){
+            user.setUserInterest(user.getUserInterest() *1.2);
+        }
+
+    }
+
     public static void main(String[] args) {
 
         User user = new User();
         user.setUserId(1l);
         user.setUserName("Erik Alves");
-        user.setUserLimitCredit(100.50l);
-        user.setUserRisk("A");
+        user.setUserLimitCredit(new BigDecimal("100.00"));
+        user.setUserRisk("B");
+        user.setUserInterest(22.25);
+        if (user.getUserRisk().equalsIgnoreCase("B")){
+            user.setUserInterest(user.getUserInterest() *1.1);
+        }
+        else if (user.getUserRisk().equalsIgnoreCase("C")){
+            user.setUserInterest(user.getUserInterest() *1.2);
+        }
 
-        LOGGER.debug("User created TS {} ", user.getUserName());
+        LOGGER.debug("User {} ", user.toString());
 
         String json = getGson().toJson(user);
-        LOGGER.debug("Json representation of a the created Product {} ", json);
+        LOGGER.debug("Json representation of a the created Entity {} ", json);
 
     }
 }

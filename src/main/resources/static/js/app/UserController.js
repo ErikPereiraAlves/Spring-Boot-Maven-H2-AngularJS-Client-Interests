@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('store').controller('ProductController',
-    ['ProductService', '$scope',  function( ProductService, $scope) {
+angular.module('bank').controller('UserController',
+    ['UserService', '$scope',  function( UserService, $scope) {
 
         var self = this;
-        self.product = {};
-        self.products=[];
+        self.user = {};
+        self.users=[];
 
         self.submit = submit;
-        self.getAllProducts = getAllProducts;
-        self.createProduct = createProduct;
-        self.updateProduct = updateProduct;
-        self.removeProduct = removeProduct;
-        self.editProduct = editProduct;
+        self.getAllUsers = getAllUsers;
+        self.createUser = createUser;
+        self.updateUser = updateUser;
+        self.removeUser = removeUser;
+        self.editUser = editUser;
         self.reset = reset;
 
         self.successMessage = '';
@@ -24,22 +24,22 @@ angular.module('store').controller('ProductController',
 
         function submit() {
             console.log('Submitting');
-            if (self.productId === undefined || self.productId === null) {
-                console.log('Saving New Product', self.product);
-                createProduct(self.product);
+            if (self.userId === undefined || self.userId === null) {
+                console.log('Saving New User', self.user);
+                createUser(self.user);
             } else {
-                updateProduct(self.product, self.productId);
-                console.log('Product updated with id ', self.productId);
+                updateUser(self.user, self.userId);
+                console.log('User updated with id ', self.userId);
             }
         }
 
-        function createProduct(product) {
-            console.log('About to create product');
-            ProductService.createProduct(product)
+        function createUser(user) {
+            console.log('About to create user');
+            UserService.createUser(user)
                 .then(
                     function (response) {
-                        console.log('Product created successfully');
-                        self.successMessage = 'Product created successfully';
+                        console.log('User created successfully');
+                        self.successMessage = 'User created successfully';
                         self.errorMessage='';
                         self.done = true;
                         self.product={};
@@ -54,60 +54,60 @@ angular.module('store').controller('ProductController',
         }
 
 
-        function updateProduct(product, id){
-            console.log('About to update product');
-            ProductService.updateProduct(product, id)
+        function updateUser(user, id){
+            console.log('About to update user');
+            UserService.updateUser(user, id)
                 .then(
                     function (response){
-                        console.log('Product updated successfully');
-                        self.successMessage='Product updated successfully';
+                        console.log('User updated successfully');
+                        self.successMessage='User updated successfully';
                         self.errorMessage='';
                         self.done = true;
                         $scope.myForm.$setPristine();
                     },
                     function(errResponse){
-                        console.error('Error while updating Product');
-                        self.errorMessage='Error while updating Product '+errResponse.data;
+                        console.error('Error while updating User');
+                        self.errorMessage='Error while updating User '+errResponse.data;
                         self.successMessage='';
                     }
                 );
         }
 
 
-        function removeProduct(id){
-            console.log('About to remove Product with id '+id);
-            ProductService.removeProduct(id)
+        function removeUser(id){
+            console.log('About to remove User with id '+id);
+            UserService.removeUser(id)
                 .then(
                     function(){
-                        console.log('Product '+id + ' removed successfully');
+                        console.log('User '+id + ' removed successfully');
                     },
                     function(errResponse){
-                        console.error('Error while removing product '+id +', Error :'+errResponse.data);
+                        console.error('Error while removing User '+id +', Error :'+errResponse.data);
                     }
                 );
         }
 
 
-        function getAllProducts(){
-            return ProductService.getAllProducts();
+        function getAllUsers(){
+            return UserService.getAllUsers();
         }
 
-        function editProduct(id) {
+        function editUser(id) {
             self.successMessage='';
             self.errorMessage='';
-            ProductService.getProduct(id).then(
-                function (product) {
-                    self.product = product;
+            UserService.getUser(id).then(
+                function (user) {
+                    self.user = user;
                 },
                 function (errResponse) {
-                    console.error('Error while removing product ' + id + ', Error :' + errResponse.data);
+                    console.error('Error while removing User ' + id + ', Error :' + errResponse.data);
                 }
             );
         }
         function reset(){
             self.successMessage='';
             self.errorMessage='';
-            self.product={};
+            self.user={};
             $scope.myForm.$setPristine(); //reset Form
         }
     }

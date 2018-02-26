@@ -1,6 +1,7 @@
 package com.erikalves.application.repositories;
 
 
+import com.erikalves.application.model.User;
 import com.erikalves.application.utils.Util;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -23,21 +25,20 @@ public class UserRepositoryTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepositoryTest.class);
 
     @Autowired(required = true)
-    ProductRepository productRepository;
+    UserRepository repository;
 
-    Product createdProduct;
+    User createdUser;
 
+    Long existingUserId =1l;
 
     @Before
     public void begin() {
 
-        createdProduct = new Product();
-        createdProduct.setProductParentId(1l);
-        createdProduct.setProductName("Smartphone JUNIT");
-        createdProduct.setProductDesc("Junit now manufactures smartphones");
-        createdProduct.setProductPrice(200.00);
-        createdProduct.setProductCreatedTs(Util.getCurrentDate());
-        createdProduct.setProductUpdatedTs(Util.getCurrentDate());
+        createdUser = new User();
+       createdUser.setUserName("Erik Alves");
+        createdUser.setUserLimitCredit(new BigDecimal("100.00"));
+        createdUser.setUserRisk("B");
+        Util.interestCalculation(createdUser);
 
     }
 
@@ -52,95 +53,59 @@ public class UserRepositoryTest {
 
     public void shouldCreateProduct() {
 
-        Product savedProduct = productRepository.save(createdProduct);
-        LOGGER.debug("saved product ID {}", savedProduct);
-        Assert.assertNotNull(savedProduct.getProductId());
+        User localUser = repository.save(createdUser);
+        LOGGER.debug("saved entity ID {}", localUser);
+        Assert.assertNotNull(localUser.getUserId());
+
 
     }
 
     public void shouldDeleteProduct() {
 
-        Long id = createdProduct.getProductId();
-        productRepository.delete(id);
-        Product deletedProduct = productRepository.findOne(id);
-        Assert.assertEquals(null, deletedProduct);
+        Long id = createdUser.getUserId();
+        repository.delete(id);
+        User deletedUser = repository.findOne(id);
+        Assert.assertEquals(null, deletedUser);
 
     }
 
 
     public void shouldUpdateProduct() {
 
-        createdProduct.setProductDesc("UPDATED");
-        Product savedProduct = productRepository.save(createdProduct);
-        Assert.assertTrue(null != savedProduct);
-        Assert.assertTrue("UPDATED".equals(savedProduct.getProductDesc()));
+        createdUser.setUserRisk("C");
+        createdUser.setUserName("Name updated by JUNIT - John Doe is my name now");
+        User updatedUser = repository.save(createdUser);
+        Assert.assertTrue(null != updatedUser);
+        Assert.assertTrue("Name updated by JUNIT - John Doe is my name now".equals(updatedUser.getUserName()));
     }
 
 
 
     @Test
-    public void findProductIncludingRelationships() {
+    public void findSpecificUser() {
 
 
-        List<Product> list = productRepository.findProductIncludingRelationships(1l);
-        Assert.assertTrue(null != list);
-        for (Product product : list) {
-            Assert.assertTrue(null != product);
-            LOGGER.debug(" *** RESULT *** {}", product.toString());
+        User findUser = repository.getOne(existingUserId);
+        Assert.assertTrue(null != findUser);
+        LOGGER.debug(" *** RESULT *** {}", findUser.toString());
 
-            Set<Product> childrenProducts = product.getProducts();
-            for (Product childProduct : childrenProducts) {
-                Assert.assertTrue(null != childProduct);
-                Assert.assertTrue(null != childProduct.getProductId());
-                LOGGER.debug(" *** RESULT (child product) *** {}", childProduct.toString());
-
-                           }
-
-        }
-    }
-
-    @Test
-    public void findProductExcludingRelationships() {
-
-        //Product product = productRepository.findProductExcludingRelationships(3l);
-        Product product = productRepository.findProductExcludingRelationships(3l);
-        Assert.assertTrue(null != product);
-        Assert.assertTrue(null != product.getProductId());
-        LOGGER.debug(" *** RESULT *** {}", product.toString());
-        //String json = Util.toJson(product);
-       // Assert.assertTrue(null != json);
-        //LOGGER.debug(" *** RESULT *** {}", json);
     }
 
 
     @Test
     public void findAllIncludingRelationships()  {
 
-        List<Product> list = productRepository.findAllProductsIncludingRelationships();
+        List<User> list = repository.findAll();
 
         Assert.assertTrue(null != list);
-        for(Product product: list){
-            Assert.assertTrue(null != product);
-            Assert.assertTrue(null != product.getProductId());
-            LOGGER.debug(" *** RESULT *** {}", product.toString());
+        for(User user: list){
+            Assert.assertTrue(null != user);
+            Assert.assertTrue(null != user.getUserId());
+            LOGGER.debug(" *** RESULT *** {}", user.toString());
         }
 
     }
 
-    @Test
-    public void findAllExcludingRelationships() {
 
-        String json;
-        List<Product> list = productRepository.findAllExcludingRelationships();
-        Assert.assertTrue(null != list && list.size()>0);
-        for(Product product: list){
-            Assert.assertTrue(null != product);
-            Assert.assertTrue(null != product.getProductId());
-            LOGGER.debug(" *** RESULT *** {}", product.toString());
-        }
-        //JSONArray array = Util.toJsonArray(list);
-        //LOGGER.debug(" *** RESULT *** {}", array);
-
-    }
 
 }

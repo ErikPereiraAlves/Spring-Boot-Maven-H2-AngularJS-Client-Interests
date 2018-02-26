@@ -1,5 +1,7 @@
 package com.erikalves.application.service;
 
+import com.erikalves.application.model.User;
+import com.erikalves.application.repositories.UserRepository;
 import com.erikalves.application.utils.Util;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Assert;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -24,52 +27,52 @@ public class UserServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImplTest.class);
 
     @Autowired
-    @Qualifier(value="ProductService")
-    ProductService productService;
+    @Qualifier(value="UserService")
+    UserService service;
 
-   @Autowired (required=true)
-    ProductRepository productRepository;
+    @Autowired (required=true)
+    UserRepository repository;
 
-    Product product;
 
-    Product savedProduct;
+    User user;
+
+    User savedUser;
 
     @Before
     public void  begin(){
 
-        product = new Product();
-        product.setProductParentId(1l);
-        product.setProductName("Smartphone Product service impl test");
-        product.setProductDesc("UserServiceImplTest");
-        product.setProductPrice(100.55);
-        product.setProductCreatedTs(Util.getCurrentDate());
-        product.setProductUpdatedTs(Util.getCurrentDate());
+        user = new User();
+        user.setUserName("Erik Alves");
+        user.setUserLimitCredit(new BigDecimal("100.00"));
+        user.setUserRisk("B");
+        Util.interestCalculation(user);
 
-        savedProduct = productService.save(product);
-        LOGGER.debug("saved product ID {}",savedProduct.getProductId());
-        Assert.assertNotNull(savedProduct.getProductId());
+
+        savedUser = service.save(user);
+        LOGGER.debug("saved user ID {}",savedUser.toString());
+        Assert.assertNotNull(savedUser.getUserId());
 
     }
 
     @Test
-    public void getId() {
+    public void shouldFindSpecificUser() {
 
-        Long productId = productService.getId(savedProduct);
-        Assert.assertNotNull(productId);
+        Long userId = service.getId(savedUser);
+        Assert.assertNotNull(userId);
     }
 
     @Test
     public void getRepository() {
 
-        CrudRepository<Product, Long> crudRepository = productService.getRepository();
+        CrudRepository<User, Long> crudRepository = service.getRepository();
         Assert.assertNotNull(crudRepository);
-        Assert.assertTrue(EqualsBuilder.reflectionEquals(productRepository,crudRepository));
+        Assert.assertTrue(EqualsBuilder.reflectionEquals(repository,crudRepository));
     }
 
     @Test
-    public void findAllChildrenProductsByProductParentId() {
+    public void shouldFindAllUsers() {
 
-        List<Product> list = productService.findProductIncludingRelationships(savedProduct.getProductParentId());
+        List<User> list = Util.iterableToCollection(service.findAll());
         Assert.assertNotNull(list);
         Assert.assertTrue(list.size() >0);
 

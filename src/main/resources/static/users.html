@@ -3,7 +3,7 @@
 <div class="generic-container">
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading"><span class="lead">Specific Product </span></div>
+        <div class="panel-heading"><span class="lead">Specific User</span></div>
         <div class="panel-body">
             <div class="formcontainer">
                 <div class="alert alert-success" role="alert" ng-if="ctrl.successMessage">{{ctrl.successMessage}}</div>
@@ -11,14 +11,14 @@
                 <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
 
 
-                    <input type="hidden" ng-model="ctrl.productId" />
+                    <input type="hidden" ng-model="ctrl.userId" />
 
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="productName">Name</label>
+                            <label class="col-md-2 control-lable" for="userName">Name</label>
                             <div class="col-md-7">
-                                <input type="text" ng-model="ctrl.productName" id="productName" class="form-control input-sm" placeholder="Enter Name" required ng-minlength="3"/>
+                                <input type="text" ng-model="ctrl.userName" id="userName" class="form-control input-sm" placeholder="Enter Name" required ng-minlength="3"/>
                             </div>
                         </div>
                     </div>
@@ -26,35 +26,27 @@
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="productDesc">Description</label>
+                            <label class="col-md-2 control-lable" for="userLimitCredit">Credit Limit</label>
                             <div class="col-md-7">
-                                <input type="text" ng-model="ctrl.productDesc" id="productDesc" class="form-control input-sm" placeholder="Enter description " required ng-minlength="3"/>
+                                <input type="text" ng-model="ctrl.userLimitCredit" id="userLimitCredit" class="form-control input-sm" placeholder="Enter credit Limit " required ng-pattern="ctrl.onlyNumbers"/>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="productPrice">Price</label>
+                            <label class="col-md-2 control-lable" for="userRisk">Risk (A,B or C)</label>
                             <div class="col-md-7">
-                                <input type="text" ng-model="ctrl.productPrice" id="productPrice" class="form-control input-sm" placeholder="Enter Price" required ng-pattern="ctrl.onlyNumbers"/>
+                                <input type="text" ng-model="ctrl.userRisk" id="userRisk" class="form-control input-sm" placeholder="Enter Risk" required ng-pattern="ctrl.onlyNumbers"/>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label class="col-md-2 control-lable" for="productParentId">Parent ID</label>
-                            <div class="col-md-7">
-                                <input type="text" ng-model="ctrl.productParentId" id="productParentId" class="form-control input-sm" placeholder="Enter parent ID" required ng-pattern="ctrl.onlyNumbers"/>
-                            </div>
-                        </div>
-                    </div>
 
 
                     <div class="row">
                         <div class="form-actions floatRight">
-                            <input type="submit"  value="{{!ProductController.productId ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">
+                            <input type="submit"  value="{{!UserController.userId ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid || myForm.$pristine">
                             <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset Form</button>
                         </div>
                     </div>
@@ -64,34 +56,32 @@
     </div>
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading"><span class="lead">Products</span></div>
+        <div class="panel-heading"><span class="lead">Users</span></div>
         <div class="panel-body">
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>PARENT ID</th>
                         <th>NAME</th>
-                        <th>DESCRIPTION</th>
-                        <th>PRICE</th>
-                        <th>CREATED DATE</th>
+                        <th>CREDIT LIMIT</th>
+                        <th>RISK</th>
+                        <th>INTEREST (JUROS)</th>
                         <th>UPDATED DATE</th>
                         <th width="100"></th>
                         <th width="100"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="u in ctrl.getAllProducts()">
-                        <td>{{u.productId}}</td>
-                        <td>{{u.productParentId}}</td>
+                    <tr ng-repeat="u in ctrl.getAllUsers()">
+                        <td>{{u.userId}}</td>
+                        <td>{{u.userName}}</td>
                         <td>{{u.productName}}</td>
-                        <td>{{u.productDescr}}</td>
-                        <td>{{u.productPrice}}</td>
-                        <td>{{u.productCreatedTs}}</td>
-                        <td>{{u.productUpdatedTs}}</td>
-                        <td><button type="button" ng-click="ctrl.editProduct(u.productId)" class="btn btn-success custom-width">Edit</button></td>
-                        <td><button type="button" ng-click="ctrl.removeProduct(u.productId)" class="btn btn-danger custom-width">Remove</button></td>
+                        <td>{{u.userLimitCredit}}</td>
+                        <td>{{u.userRisk}}</td>
+                        <td>{{u.userInterest}}</td>
+                        <td><button type="button" ng-click="ctrl.editUser(u.userId)" class="btn btn-success custom-width">Edit</button></td>
+                        <td><button type="button" ng-click="ctrl.removeUser(u.userId)" class="btn btn-danger custom-width">Remove</button></td>
                     </tr>
                     </tbody>
                 </table>

@@ -1,5 +1,7 @@
 package com.erikalves.application.controllers;
 
+import com.erikalves.application.model.User;
+import com.erikalves.application.service.UserService;
 import com.erikalves.application.utils.Util;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.math.BigDecimal;
 
 import static org.junit.Assert.assertTrue;
 
@@ -36,53 +40,50 @@ public class UserRestApiControllerTest {
     HttpHeaders headers = new HttpHeaders();
 
     @Autowired
-    @Qualifier(value = "ProductService")
-    ProductService productService;
+    @Qualifier(value = "UserService")
+    UserService service;
 
-    String productJson;
+    String json;
 
-    Product savedProduct;
+    User savedUser;
 
     private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + "/store"+ uri;
+        return "http://localhost:" + port + "/bank"+ uri;
     }
 
     @Before
     public void init() {
-        createTestProduct();
+        shouldCreateInitialTestUser();
     }
 
-    private void createTestProduct() {
+    private void shouldCreateInitialTestUser() {
 
         //given
-        Product product = new Product();
-        product.setProductParentId(1l);
-        product.setProductName("Smartphone controller integration tests");
-        product.setProductDesc("controller integration tests for product");
-        product.setProductPrice(200.00);
-        product.setProductCreatedTs(Util.getCurrentDate());
-        product.setProductUpdatedTs(Util.getCurrentDate());
-        savedProduct = productService.save(product);
-        productJson = Util.getGson().toJson(savedProduct);
-        LOGGER.debug("Json representation of a the created Product {} ", productJson);
+        User user = new User();
+        user.setUserName("Jose Maria DBC");
+        user.setUserLimitCredit(new BigDecimal("100.00"));
+        user.setUserRisk("B");
+        Util.interestCalculation(user);
+        savedUser = service.save(user);
+        json = Util.getGson().toJson(savedUser);
+        LOGGER.debug("Json representation of a the created entity {} ", json);
 
         //when
-        Product findProduct = productService.get(savedProduct.getProductId());
-
+        User findUser = service.get(savedUser.getUserId());
 
         //then
-        assertTrue(findProduct.getProductId()==(savedProduct.getProductId()));
+        assertTrue(findUser.getUserId()==(savedUser.getUserId()));
 
     }
 
 
     @Test
-    public void shouldFindAllProductsExcludingRelationships() {
+    public void shouldFindAllUsers() {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/products/exclude"),
+                createURLWithPort("/api/v1/users"),
                 HttpMethod.GET,entity,String.class);
 
         LOGGER.debug("Response results {}",response.getBody());
@@ -93,12 +94,12 @@ public class UserRestApiControllerTest {
     }
 
     @Test
-    public void shouldFindAllProductsIncludingRelationships() {
+    public void shouldFindSpecificUser() {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/products/include"),
+                createURLWithPort("/api/v1/users/1"),
                 HttpMethod.GET,entity,String.class);
 
         LOGGER.debug("Response results {}",response.getBody());
@@ -108,65 +109,36 @@ public class UserRestApiControllerTest {
     }
 
 
+
     @Test
-    public void shouldGetProductExcludingRelationships() {
+    public void shouldDeleteUser() {
 
-        HttpEntity<String> entity = new HttpEntity<>(null, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/products/exclude/1"),
-                HttpMethod.GET,entity,String.class);
-
-        LOGGER.debug("Response results {}",response.getBody());
-        Assert.assertTrue(response.getBody().contains("1"));
-        Assert.assertFalse(response.getBody().contains("Internal Server Error"));
+        restTemplate.delete(createURLWithPort("/api/v1/products/"+savedUser.getUserId()));
+        User deletedUser = service.get(savedUser.getUserId());
+        LOGGER.debug("Response results {}",deletedUser);
+        Assert.assertNull(deletedUser);
 
     }
 
     @Test
-    public void shouldGetProductIncludingRelationships() {
+    public void shouldCreateUser() {
 
-        HttpEntity<String> entity = new HttpEntity<>(null, headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/v1/products/include/1"),
-                HttpMethod.GET,entity,String.class);
-
-        LOGGER.debug("Response results {}",response.getBody());
-        Assert.assertFalse(response.getBody().contains("Internal Server Error"));
-        Assert.assertTrue(response.getBody().contains("\"productId\":1"));
-    }
-
-    @Test
-    public void shouldDeleteProduct() {
-
-        restTemplate.delete(createURLWithPort("/api/v1/products/"+savedProduct.getProductId()));
-        Product deletedProduct = productService.get(savedProduct.getProductId());
-        LOGGER.debug("Response results {}",deletedProduct);
-        Assert.assertNull(deletedProduct);
-
-    }
-
-    @Test
-    public void shouldCreateProduct() {
-
-        createTestProduct();
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(createURLWithPort("/store/api/v1/products") , savedProduct, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(createURLWithPort("/api/v1/users") , savedUser, String.class);
         LOGGER.debug("Response results {}",responseEntity.getBody().toString());
         Assert.assertNotNull(responseEntity);
 
     }
 
     @Test
-    public void shouldUpdateProduct() {
+    public void shouldUpdateUser() {
 
-        Long productId = savedProduct.getProductId();
-        savedProduct.setProductDesc("UPDATED BY TEST");
-        restTemplate.put(createURLWithPort("/api/v1/products") , savedProduct, String.class);
+        Long userId = savedUser.getUserId();
+        savedUser.setUserName("UPDATED BY JUNIT");
+        restTemplate.put(createURLWithPort("/api/v1/users") , savedUser, String.class);
 
-        Product updatedProduct = productService.get(productId);
-        Assert.assertNotNull(updatedProduct);
-        Assert.assertEquals(updatedProduct.getProductId() , productId);
-        LOGGER.debug("Response results {}",updatedProduct.getProductDesc());
+        User updatedUser = service.get(userId);
+        Assert.assertNotNull(updatedUser);
+        Assert.assertEquals(updatedUser.getUserId() , userId);
+        LOGGER.debug("Response results {}",updatedUser.toString());
     }
 }

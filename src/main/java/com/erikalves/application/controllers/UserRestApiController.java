@@ -2,6 +2,7 @@ package com.erikalves.application.controllers;
 
 
 import com.erikalves.application.model.User;
+import com.erikalves.application.service.UserService;
 import com.erikalves.application.service.UserServiceImpl;
 import com.erikalves.application.utils.Util;
 import org.slf4j.Logger;
@@ -23,15 +24,15 @@ class UserRestApiController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRestApiController.class);
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
-
+    // GET ALL
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> findAll() {
 
         LOGGER.debug("****************  Return all users **********************  ");
 
-        List <User> users =userService.findAll();
+        List <User> users =Util.iterableToCollection(userService.findAll());
 
         if(null!=users && users.size() >0) {
             return new ResponseEntity<>(users, HttpStatus.OK);
@@ -42,8 +43,7 @@ class UserRestApiController {
 
     }
 
-
-
+    //GET ONE
     @GetMapping(value = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User>  getExclude(@PathVariable("user_id") String userId) {
 
@@ -61,7 +61,7 @@ class UserRestApiController {
 
 
 
-    //delete
+    //DELETE
     @DeleteMapping(value = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> delete(@PathVariable("product_id") String productId) {
 
@@ -70,7 +70,7 @@ class UserRestApiController {
         return ResponseEntity.ok((productId));
     }
 
-    // create
+    // CREATE
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> create(@RequestBody User product) {
 
@@ -80,7 +80,7 @@ class UserRestApiController {
     }
 
 
-    // update
+    // UPDATE
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> update(@RequestBody User user) {
 

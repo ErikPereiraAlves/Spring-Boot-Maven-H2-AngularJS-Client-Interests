@@ -34,16 +34,18 @@ public class User implements Serializable {
     @Column (name = "USER_RISK")
     private String userRisk;
 
-
+    @NotNull
+    @Column (name = "USER_INTEREST")  // interest = taxa de juros
+    private Double userInterest;
 
     public User() {
     }
 
-
-    public User(String userName, BigDecimal userLimitCredit, String userRisk) {
+    public User(String userName, BigDecimal userLimitCredit, String userRisk, Double userInterest) {
         this.userName = userName;
         this.userLimitCredit = userLimitCredit;
         this.userRisk = userRisk;
+        this.userInterest = userInterest;
     }
 
     public Long getUserId() {
@@ -78,6 +80,14 @@ public class User implements Serializable {
         this.userRisk = userRisk;
     }
 
+    public Double getUserInterest() {
+        return userInterest;
+    }
+
+    public void setUserInterest(Double userInterest) {
+        this.userInterest = userInterest;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -85,7 +95,7 @@ public class User implements Serializable {
                 "name='" + userName + '\'' +
                 "limitCredit='" + userLimitCredit + '\'' +
                 "risk='" + userRisk + '\'' +
-
+                "interest='" + userInterest + '\'' +
                 '}';
     }
 }
