@@ -4,7 +4,7 @@
   A aplicacao teste foi criada como um micro-servico usando Spring Boot e AngularJS. Eh possivel rodar via IDE (eclipse ou Intellij), clonando-a de meu git hub.
 
 
-http://localhost:8080/bank/users.html
+http://localhost:8080/bank/index.html
 
 
 

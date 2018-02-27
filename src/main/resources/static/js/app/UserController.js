@@ -89,6 +89,7 @@ angular.module('bank').controller('UserController',
 
 
         function getAllUsers(){
+        console.log('[UserController] getAllUsers ');
             return UserService.getAllUsers();
         }
 

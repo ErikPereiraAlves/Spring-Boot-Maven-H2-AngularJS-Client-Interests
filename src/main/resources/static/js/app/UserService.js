@@ -25,7 +25,7 @@ angular.module('bank').factory('UserService',
                         function (response) {
                             console.log('Fetched successfully all users');
                             $localStorage.users = response.data;
-
+                            console.log($localStorage.users);
                             deferred.resolve(response);
                         },
                         function (errResponse) {
@@ -37,13 +37,14 @@ angular.module('bank').factory('UserService',
             }
 
             function getAllUsers(){
+            console.log('Service - getAllUsers function call');
                 return $localStorage.users;
             }
 
             function getUser(id) {
                 console.log('Fetching users with id :'+id);
                 var deferred = $q.defer();
-                $http.get("http://localhost:8080/bank/api/v1/users/exclude/" + id)
+                $http.get("http://localhost:8080/bank/api/v1/users/" + id)
                     .then(
                         function (response) {
                             console.log('Fetched successfully users with id :'+id);

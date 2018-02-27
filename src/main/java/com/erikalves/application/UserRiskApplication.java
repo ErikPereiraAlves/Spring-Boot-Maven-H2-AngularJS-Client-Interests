@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration
 @EnableJpaRepositories
 @SpringBootApplication(scanBasePackages={"com.erikalves.application"})
-
 class UserRiskApplication {
 
     public static void main(String[] args) {
